@@ -4,6 +4,8 @@ import { StaticRouter } from "react-router-dom";
 import express from "express";
 import { renderToString } from "react-dom/server";
 
+const publicFolder = process.env.NODE_ENV === "production" ? path.join(__dirname, "../build/public") : "public";
+
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
 const cssLinksFromAssets = (assets, entrypoint) => {
@@ -55,7 +57,7 @@ export const renderApp = (req, res) => {
 const server = express();
 server
   .disable("x-powered-by")
-  .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
+  .use(express.static(publicFolder))
   .get("/*", (req, res) => {
     const { context, html } = renderApp(req, res);
     if (context.url) {
